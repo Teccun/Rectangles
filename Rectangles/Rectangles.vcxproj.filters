@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Исходные файлы\Работа с файлами">
+      <UniqueIdentifier>{6df9591b-34e3-425c-b8d2-fc4c40fee0e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Интерфейс">
+      <UniqueIdentifier>{ac7196f5-26db-450b-ad74-1bbc3442a710}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Алгоритмы">
+      <UniqueIdentifier>{06052789-e9af-4b65-bbbf-60421569e9cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Классы">
+      <UniqueIdentifier>{2d12f18a-8536-4dd3-98ce-f4262d4531ea}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="myalgoritm.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="workwithfiles\workwithfiles.cpp">
+      <Filter>Исходные файлы\Работа с файлами</Filter>
+    </ClCompile>
+    <ClCompile Include="interface.cpp">
+      <Filter>Исходные файлы\Интерфейс</Filter>
+    </ClCompile>
+    <ClCompile Include="algoritms\broteforce.cpp">
+      <Filter>Исходные файлы\Алгоритмы</Filter>
+    </ClCompile>
+    <ClCompile Include="rectangle.cpp">
+      <Filter>Исходные файлы\Классы</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="myalgoritm.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="workwithfiles\workwithfiles.h">
+      <Filter>Исходные файлы\Работа с файлами</Filter>
+    </ClInclude>
+    <ClInclude Include="interface.h">
+      <Filter>Исходные файлы\Интерфейс</Filter>
+    </ClInclude>
+    <ClInclude Include="algoritms\algoritms.h">
+      <Filter>Исходные файлы\Алгоритмы</Filter>
+    </ClInclude>
+    <ClInclude Include="algoritms\broteforce.h">
+      <Filter>Исходные файлы\Алгоритмы</Filter>
+    </ClInclude>
+    <ClInclude Include="rectangle.h">
+      <Filter>Исходные файлы\Классы</Filter>
+    </ClInclude>
+    <ClInclude Include="test.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="in.txt">
+      <Filter>Исходные файлы\Работа с файлами</Filter>
+    </Text>
+    <Text Include="out.txt">
+      <Filter>Исходные файлы\Работа с файлами</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
