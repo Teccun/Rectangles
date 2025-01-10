@@ -1,10 +1,4 @@
 #pragma once
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <iostream>
-#include <algorithm>
-#include <set>
 #include "../rectangle.h"
 
 

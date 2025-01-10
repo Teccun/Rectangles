@@ -1,13 +1,16 @@
 #pragma once
-#include <vector>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fstream>   
+#include <iostream>  
+#include <string>    
+#include <iomanip>   // manipulator
+#include <sstream>   // string stream
+#include <math.h>    
 #include <algorithm>
-#include <string>
-#include <fstream>
-#include <math.h>
-#include "rectangle.h"
-#include <ctime>
-#include <iostream>
-
+#include <vector>
+#include <set>
+#include <map>
 
 struct Coord {
 	float X;
@@ -31,7 +34,7 @@ class rectangle {
 private:
 	Coord leftDown;
 	Coord rightUp;
-	unsigned long long intersection = 0;
+	unsigned long long intersection = 1;
 public:
 	rectangle(Coord leftDown = {0, 0}, Coord rightUp = {0, 0}) : leftDown(leftDown), rightUp(rightUp) {
 		this->leftDown = leftDown; this->leftDown.type = 1; this->rightUp = rightUp; this->rightUp.type = -1; }
@@ -51,6 +54,7 @@ public:
 	void decInter();
 
 	bool areRectanglesIntersecting(const rectangle& B);
+	bool isInside(const rectangle& r);
 
 	friend std::ostream& operator << (std::ostream& os, const rectangle& rect);
 	friend std::istream& operator >> (std::istream& in, rectangle& rect);
@@ -59,11 +63,6 @@ public:
 	bool operator < (const rectangle& rect) const;
 
 	bool operator == (const rectangle& rect) const;
-
-	/*bool operator != (const rectangle& rect) const;
-	bool operator > (const rectangle& rect) const;
-	bool operator >= (const rectangle& rect) const;
-	bool operator <= (const rectangle& rect) const;*/
 };
 std::ostream& operator << (std::ostream& os, const rectangle& rect);
 std::istream& operator >> (std::istream& in, rectangle& rect);

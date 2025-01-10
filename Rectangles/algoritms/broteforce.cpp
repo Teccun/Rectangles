@@ -1,93 +1,169 @@
 #include "broteforce.h"
 
+struct event {
+	float x;
+	int type;
+	rectangle rect;
+
+	bool operator < (const event& other) const {
+		return x < other.x || (x == other.x && type > other.type);
+		/*if (x != other.x)
+			return x < other.x;
+		return type < other.type;*/
+	}
+};
+
+int getPrecision(const float& number) {
+	std::ostringstream oss;
+	oss << std::fixed << std::setprecision(15) << number;
+	std::string numStr = oss.str();
+
+	size_t dotPos = numStr.find('.');
+	if (dotPos == std::string::npos) {
+		return 0;
+	}
+
+	size_t lastNonZero = numStr.find_last_not_of('0');
+	return lastNonZero - dotPos;
+}
+
+bool isPointCovered(const rectangle& rect, float x, float y, float epsilon = 1) {
+	return (x >= rect.getCordLeftDown().X && x <= rect.getCordRightUp().X + epsilon &&
+		y >= rect.getCordLeftDown().Y && y <= rect.getCordRightUp().Y + epsilon);
+}
+
 void broteforce::execute() {	
+	std::vector<event> events;
+	for (const auto& rect : rectangles) {
+		events.push_back({ rect.getCordLeftDown().X, 1, rect}); // Начало прямоугольника
+		events.push_back({ rect.getCordRightUp().X, -1, rect}); // Конец прямоугольника
+	}
+	std::sort(events.begin(), events.end()); // Сортируем события по X
 
-	std::vector<rectangle> rect_inter = rectangles;
-	std::vector<rectangle> all_rect = rect_inter;
+	// Множество активных прямоугольников (по Y)
+	std::multiset<float> activeYStart, activeYEnd;
+	std::vector<rectangle> result;
 
-	std::vector<rectangle> tmp;
-	char flag_1 = 0;
-	char flag_2 = 0;
-	do {
-		tmp.clear();
-		float x1, x2, x3, x4, y1, y2, y3, y4;
-		Coord LD, RU;
-		for (int i = 0; i < rect_inter.size(); i++) {
+	// Перебираем события
+	for (size_t i = 0; i < events.size(); ++i) {
+		const event& e = events[i];
 
-			x1 = rect_inter[i].getCordLeftDown().X;
-			y1 = rect_inter[i].getCordLeftDown().Y;
-			x2 = rect_inter[i].getCordRightUp().X;
-			y2 = rect_inter[i].getCordRightUp().Y;
-			
-			for (int j = 0; j < rect_inter.size(); j++) {
-				if (i != j) {
-					if (rect_inter[i].areRectanglesIntersecting(rect_inter[j])) {
-						
-						x3 = rect_inter[j].getCordLeftDown().X;
-						y3 = rect_inter[j].getCordLeftDown().Y;
-						x4 = rect_inter[j].getCordRightUp().X;
-						y4 = rect_inter[j].getCordRightUp().Y;
+		if (e.type == 1) {
+			// Начало прямоугольника: добавляем его Y-интервал
+			activeYStart.insert(e.rect.getCordLeftDown().Y);
+			activeYEnd.insert(e.rect.getCordRightUp().Y);
+		}
+		else {
+			// Конец прямоугольника: удаляем его Y-интервал
+			activeYStart.erase(activeYStart.find(e.rect.getCordLeftDown().Y));
+			activeYEnd.erase(activeYEnd.find(e.rect.getCordRightUp().Y));
+		}
 
-						LD.X = std::max(x1, x3);
-						LD.Y = std::max(y1, y3);
-						RU.X = std::min(x2, x4);
-						RU.Y = std::min(y2, y4);
+		// Если это не последнее событие и X изменился
+		if (i + 1 < events.size() && events[i].x != events[i + 1].x) {
+			float x1 = events[i].x;
+			float x2 = events[i + 1].x;
 
-						rectangle new_rect(LD, RU);
+			// Перебираем Y-интервалы, где количество покрытий >= k
+			auto itStart = activeYStart.begin();
+			auto itEnd = activeYEnd.begin();
+			float prevY = -INFINITY;
 
-						/*
-						Проверка на присутствие в данной итерации 
-						Если присутствует, то... то ничего не делаем
-						Не происходит добавления в следующую итерацию
-						За это отвечает флаг2 
-						*/
+			while (itStart != activeYStart.end() && itEnd != activeYEnd.end()) {
+				float y1 = *itStart;
+				float y2 = *itEnd;
 
-						for (int f = 0; f < tmp.size(); f++) {
-							if (new_rect == tmp[f]) {
-								//tmp[f].decInter();
-								flag_2 = 1;
-								break;
-							}
+				// Если количество покрытий >= k, добавляем прямоугольник
+				if (std::distance(activeYStart.lower_bound(y1), activeYStart.upper_bound(y2)) >= k) {
+					rectangle newRect = { {x1, y1}, {x2, y2} };
+
+					// Проверяем, что новый прямоугольник не содержится в уже добавленных
+					bool isDuplicate = false;
+					for (const auto& existingRect : result) {
+						if (newRect.isInside(existingRect)) {
+							isDuplicate = true;
+							break;
 						}
+					}
 
-						/*
-						Не верно работает счетчик пересечений. Нужно сделать так, что бы работал верно
-						Проверить лучше данный код
-						*/
-
-						for (int f = 0; f < all_rect.size(); f++) {
-							if (new_rect == all_rect[f]) {
-								if (!flag_2)
-									all_rect[f].incrInter();
-								flag_1 = 1;
-								break;
-							}
-						}
-
-						/*
-						Нужно задуматься над хэш-таблицей. Нужно посмотреть, можно ли хранить данные там, ключ - прямоугольник, а данные - количество пересечений.
-						*/
-
-						if (flag_2 == 0)
-							tmp.push_back(new_rect);
-						else
-							flag_2 = 0;
-
-						if (flag_1 == 0)
-							all_rect.push_back(new_rect);
-						else
-							flag_1 = 0;
+					if (!isDuplicate) {
+						result.push_back(newRect);
 					}
 				}
+
+				++itStart;
+				++itEnd;
 			}
 		}
-		if (!tmp.empty())
-			rect_inter = tmp;
-	} while (!tmp.empty());
+	}
+	/*std::vector<event> events;
+	for (const auto& rect : rectangles) {
+		events.push_back({ rect.getCordLeftDown().X, 1, rect });
+		events.push_back({ rect.getCordRightUp().X, -1, rect });
+	}
 
-	for (int i = 0; i < all_rect.size(); i++) {
-		//std::cout << all_rect[i].get_intersection() << "\n";
-		if (all_rect[i].get_intersection() >= k)
-			std::cout << all_rect[i] << " " << all_rect[i].get_intersection() << '\n';
+	std::sort(events.begin(), events.end());
+
+	std::multiset<float> activeYStart, activeYEnd;
+	std::vector<rectangle> result;
+
+	for (int i = 0; i < events.size(); i++) {
+		const event& e = events[i];
+
+		if (e.type == 1) {
+			activeYStart.insert(e.rect.getCordLeftDown().Y);
+			activeYEnd.insert(e.rect.getCordRightUp().Y);
+		}
+		else {
+			activeYStart.erase(activeYStart.find(e.rect.getCordLeftDown().Y));
+			activeYEnd.erase(activeYEnd.find(e.rect.getCordRightUp().Y));
+		}
+
+		if (i + 1 < events.size() && events[i].x != events[i + 1].x) {
+			float x1 = events[i].x;
+			float x2 = events[i + 1].x;
+
+			auto itStart = activeYStart.begin();
+			auto itEnd = activeYEnd.begin();
+			float prevY = -INFINITY;
+
+			while (itStart != activeYStart.end() && itEnd != activeYEnd.end()) {
+				float y1 = *itStart;
+				float y2 = *itEnd;
+
+				// Если количество покрытий >= k, добавляем прямоугольник
+				if (std::distance(activeYStart.lower_bound(y1), activeYStart.upper_bound(y2)) >= k) {
+					rectangle new_rect = { {x1, y1}, {x2, y2} };
+					bool isDupl = false;
+					for (const auto& rect : result) {
+						if (new_rect.isInside(rect)) {
+							isDupl = true;
+							break;
+						}
+					}
+					if (!isDupl)
+						result.push_back(new_rect);
+				}
+
+				++itStart;
+				++itEnd;
+			}
+		}
+	}*/
+	
+	std::vector<rectangle> finalRes;
+	for (auto& rect : result) {
+		int count = 0;
+		for (const auto& r : rectangles) {
+			if (rect.isInside(r))
+				count++;
+		}
+		if (count >= k)
+			finalRes.push_back(rect);
+	}
+
+	for (auto rect : finalRes) {
+		std::cout << rect << '\n';
 	}
 }
+

@@ -7,3 +7,5 @@ public:
 
 	void execute();
 };
+
+int getPrecision(const float& number);

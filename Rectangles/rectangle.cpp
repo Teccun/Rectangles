@@ -92,24 +92,19 @@ bool rectangle::operator < (const rectangle& rect) const {
 bool rectangle::operator == (const rectangle& rect) const {
 	return leftDown == rect.leftDown && rightUp == rect.rightUp;
 }
-//bool rectangle::operator != (const rectangle& rect) const {
-//
-//}
-//bool rectangle::operator > (const rectangle& rect) const {
-//
-//}
-//bool rectangle::operator >= (const rectangle& rect) const {
-//
-//}
-//bool rectangle::operator <= (const rectangle& rect) const {
-//
-//}
 
 bool rectangle::areRectanglesIntersecting(const rectangle& B) {
 	return (this->getCordLeftDown().X < B.getCordRightUp().X and
 		this->getCordRightUp().X > B.getCordLeftDown().X and
 		this->getCordLeftDown().Y < B.getCordRightUp().Y and
 		this->getCordRightUp().Y > B.getCordLeftDown().Y);
+}
+
+bool rectangle::isInside(const rectangle& r) {
+	return (this->getCordLeftDown().X >= r.getCordLeftDown().X &&
+		this->getCordLeftDown().Y >= r.getCordLeftDown().Y &&
+		this->getCordRightUp().X <= r.getCordRightUp().X &&
+		this->getCordRightUp().Y <= r.getCordRightUp().Y);
 }
 
 void rectangle::incrInter() {
