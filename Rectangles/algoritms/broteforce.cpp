@@ -1,18 +1,5 @@
 #include "broteforce.h"
 
-struct event {
-	float x;
-	int type;
-	rectangle rect;
-
-	bool operator < (const event& other) const {
-		return x < other.x || (x == other.x && type > other.type);
-		/*if (x != other.x)
-			return x < other.x;
-		return type < other.type;*/
-	}
-};
-
 int getPrecision(const float& number) {
 	std::ostringstream oss;
 	oss << std::fixed << std::setprecision(15) << number;
@@ -32,126 +19,88 @@ bool isPointCovered(const rectangle& rect, float x, float y, float epsilon = 1) 
 		y >= rect.getCordLeftDown().Y && y <= rect.getCordRightUp().Y + epsilon);
 }
 
-void broteforce::execute() {	
-	std::vector<event> events;
-	for (const auto& rect : rectangles) {
-		events.push_back({ rect.getCordLeftDown().X, 1, rect}); // Начало прямоугольника
-		events.push_back({ rect.getCordRightUp().X, -1, rect}); // Конец прямоугольника
-	}
-	std::sort(events.begin(), events.end()); // Сортируем события по X
+void broteforce::execute() {
+	int numRect = rectangles.size();
 
-	// Множество активных прямоугольников (по Y)
-	std::multiset<float> activeYStart, activeYEnd;
-	std::vector<rectangle> result;
+	event* events_arr = fillEvents(numRect * 2);
+	sortEvents(events_arr, numRect);
 
-	// Перебираем события
-	for (size_t i = 0; i < events.size(); ++i) {
-		const event& e = events[i];
+	for (int i = 0; i < numRect * 2; i++)
+		std::cout << events_arr[i].x << '\n';
+
+	list activeYStart, activeYEnd;
+	rectangle* reseult = new rectangle[(numRect * 2) * (numRect * 2)]; // чтобы уж наверняка.
+	int countResultRect = 0;
+
+	for (int i = 0; i < numRect * 2; i++) {
+		const event& e = events_arr[i];
+		
+		node newYStart, newYEnd;
+		newYStart.y = e.rect->getCordLeftDown().Y;
+		newYStart.type = 1;
+		newYEnd.y = e.rect->getCordRightUp().Y;
+		newYEnd.type = -1;
 
 		if (e.type == 1) {
-			// Начало прямоугольника: добавляем его Y-интервал
-			activeYStart.insert(e.rect.getCordLeftDown().Y);
-			activeYEnd.insert(e.rect.getCordRightUp().Y);
+			activeYStart.addNewY(&newYStart);
+			activeYStart.addNewY(&newYEnd);
+			activeYEnd.addNewY(&newYStart);
+			activeYEnd.addNewY(&newYEnd);
 		}
 		else {
-			// Конец прямоугольника: удаляем его Y-интервал
-			activeYStart.erase(activeYStart.find(e.rect.getCordLeftDown().Y));
-			activeYEnd.erase(activeYEnd.find(e.rect.getCordRightUp().Y));
+			activeYStart.deleteY(&newYStart);
+			activeYEnd.deleteY(&newYEnd);
+			activeYStart.deleteY(&newYStart);
+			activeYEnd.deleteY(&newYEnd);
 		}
 
-		// Если это не последнее событие и X изменился
-		if (i + 1 < events.size() && events[i].x != events[i + 1].x) {
-			float x1 = events[i].x;
-			float x2 = events[i + 1].x;
+		if (i + 1 < numRect * 2 && events_arr[i].x != events_arr[i + 1].x) {
+			float x1 = events_arr[i].x;
+			float x2 = events_arr[i + 1].x;
 
-			// Перебираем Y-интервалы, где количество покрытий >= k
-			auto itStart = activeYStart.begin();
-			auto itEnd = activeYEnd.begin();
-			float prevY = -INFINITY;
+			node* itStart = activeYStart.first;
+			node* itEnd = activeYEnd.first->next;
 
-			while (itStart != activeYStart.end() && itEnd != activeYEnd.end()) {
-				float y1 = *itStart;
-				float y2 = *itEnd;
 
-				// Если количество покрытий >= k, добавляем прямоугольник
-				if (std::distance(activeYStart.lower_bound(y1), activeYStart.upper_bound(y2)) >= k) {
+			int countYLines = 0;
+			while (itEnd != nullptr) {
+				float y1 = itStart->y;
+				float y2 = itEnd->y;
+
+				if (itStart->type == 1)
+					countYLines++;
+				else
+					countYLines--;
+
+				if (countYLines >= k) {
 					rectangle newRect = { {x1, y1}, {x2, y2} };
-
-					// Проверяем, что новый прямоугольник не содержится в уже добавленных
+					
 					bool isDuplicate = false;
-					for (const auto& existingRect : result) {
-						if (newRect.isInside(existingRect)) {
+					for (int j = 0; j < countResultRect; j++) {
+						if (newRect.isInside(reseult[j])) {
 							isDuplicate = true;
 							break;
 						}
 					}
 
 					if (!isDuplicate) {
-						result.push_back(newRect);
+						reseult[countResultRect] = newRect;
+						countResultRect++;
 					}
+
 				}
 
-				++itStart;
-				++itEnd;
+				itStart = itStart->next;
+				itEnd = itEnd->next;
 			}
 		}
+
 	}
-	/*std::vector<event> events;
-	for (const auto& rect : rectangles) {
-		events.push_back({ rect.getCordLeftDown().X, 1, rect });
-		events.push_back({ rect.getCordRightUp().X, -1, rect });
-	}
-
-	std::sort(events.begin(), events.end());
-
-	std::multiset<float> activeYStart, activeYEnd;
-	std::vector<rectangle> result;
-
-	for (int i = 0; i < events.size(); i++) {
-		const event& e = events[i];
-
-		if (e.type == 1) {
-			activeYStart.insert(e.rect.getCordLeftDown().Y);
-			activeYEnd.insert(e.rect.getCordRightUp().Y);
-		}
-		else {
-			activeYStart.erase(activeYStart.find(e.rect.getCordLeftDown().Y));
-			activeYEnd.erase(activeYEnd.find(e.rect.getCordRightUp().Y));
-		}
-
-		if (i + 1 < events.size() && events[i].x != events[i + 1].x) {
-			float x1 = events[i].x;
-			float x2 = events[i + 1].x;
-
-			auto itStart = activeYStart.begin();
-			auto itEnd = activeYEnd.begin();
-			float prevY = -INFINITY;
-
-			while (itStart != activeYStart.end() && itEnd != activeYEnd.end()) {
-				float y1 = *itStart;
-				float y2 = *itEnd;
-
-				// Если количество покрытий >= k, добавляем прямоугольник
-				if (std::distance(activeYStart.lower_bound(y1), activeYStart.upper_bound(y2)) >= k) {
-					rectangle new_rect = { {x1, y1}, {x2, y2} };
-					bool isDupl = false;
-					for (const auto& rect : result) {
-						if (new_rect.isInside(rect)) {
-							isDupl = true;
-							break;
-						}
-					}
-					if (!isDupl)
-						result.push_back(new_rect);
-				}
-
-				++itStart;
-				++itEnd;
-			}
-		}
-	}*/
 	
-	std::vector<rectangle> finalRes;
+	for (int i = 0; i < countResultRect; i++) {
+		std::cout << reseult[i] << "\n";
+	}
+	/*std::vector<rectangle> finalRes;
 	for (auto& rect : result) {
 		int count = 0;
 		for (const auto& r : rectangles) {
@@ -164,6 +113,63 @@ void broteforce::execute() {
 
 	for (auto rect : finalRes) {
 		std::cout << rect << '\n';
-	}
+	}*/
+
+	delete[] events_arr;
 }
 
+broteforce::event* broteforce::fillEvents(const int& size) {
+	event* ev_arr = new event[size * 2];
+	for (int i = 0; i < size; i++) {
+		event newStartEvent;
+		newStartEvent.x = rectangles_arr[i].getCordLeftDown().X;
+		newStartEvent.type = 1;
+		newStartEvent.rect = &rectangles_arr[i];
+		event newEndEvent;
+		newEndEvent.x = rectangles_arr[i].getCordRightUp().X;
+		newEndEvent.type = -1;
+		newEndEvent.rect = &rectangles_arr[i];
+		ev_arr[i * 2] = newStartEvent;
+		ev_arr[i * 2 + 1] = newEndEvent;
+	}
+	return ev_arr;
+}
+
+void broteforce::sortEvents(event * arr, const int& size) {
+	std::sort(arr, arr + size);
+}
+
+void broteforce::list::addNewY(node* other) {
+	if (first == nullptr) {
+		first = other;
+	}
+	else {
+		node* now = first;
+		while (now->y > other->y && now->next != nullptr) {
+			now = now->next;
+		}
+		if (now->next == nullptr)
+			now->next = other;
+		else if (now->next != nullptr && now->next->y != other->y) {
+			node* tmp = now->next;
+			now->next = other;
+			other->next = tmp;
+		}
+		//очистить now? как бы он не нужен если дошел до конца
+	}
+	return;
+}
+
+void broteforce::list::deleteY(node* other) {
+	node* now = first;
+	if (first->next != nullptr) {
+		while (now->y != other->y) {
+			now = now->next;
+		}
+		node* tmp = now->next;
+		now->next = tmp->next;
+		delete tmp;
+	}
+	else
+		delete now;
+}

@@ -1,15 +1,28 @@
 #pragma once
 #include "algoritms/algoritms.h"
-#include "rectangle.h"
 
 using namespace std;
 
 class interface {
 protected:
-	vector<rectangle> setOfRectangles;
- 
+	bool running;
 public:
-	interface(vector<rectangle> rect) : setOfRectangles(rect) {}
+	interface() : running(true) {}
 
-	void introduction();
+	void displayMenu();
+
+	int getUserChoice();
+
+	void handleChoice(int choice);
+
+	void problemConditionUI();
+
+	void brutefireceUI();
+
+	void scanlineUI();
+
+	void exit();
+
+	void run();
+
 };
