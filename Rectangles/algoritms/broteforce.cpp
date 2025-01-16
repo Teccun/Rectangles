@@ -23,10 +23,7 @@ void broteforce::execute() {
 	int numRect = rectangles.size();
 
 	event* events_arr = fillEvents(numRect * 2);
-	sortEvents(events_arr, numRect);
-
-	for (int i = 0; i < numRect * 2; i++)
-		std::cout << events_arr[i].x << '\n';
+	sortEvents(events_arr, numRect * 2);
 
 	list activeYStart, activeYEnd;
 	rectangle* reseult = new rectangle[(numRect * 2) * (numRect * 2)]; // чтобы уж наверняка.
@@ -49,8 +46,8 @@ void broteforce::execute() {
 		}
 		else {
 			activeYStart.deleteY(&newYStart);
-			activeYEnd.deleteY(&newYEnd);
-			activeYStart.deleteY(&newYStart);
+			activeYStart.deleteY(&newYEnd);
+			activeYEnd.deleteY(&newYStart);
 			activeYEnd.deleteY(&newYEnd);
 		}
 
@@ -61,12 +58,12 @@ void broteforce::execute() {
 			node* itStart = activeYStart.first;
 			node* itEnd = activeYEnd.first->next;
 
+			std::cout << itStart->y << " " << itEnd->y << '\n';
 
 			int countYLines = 0;
 			while (itEnd != nullptr) {
 				float y1 = itStart->y;
 				float y2 = itEnd->y;
-
 				if (itStart->type == 1)
 					countYLines++;
 				else
@@ -137,39 +134,60 @@ broteforce::event* broteforce::fillEvents(const int& size) {
 
 void broteforce::sortEvents(event * arr, const int& size) {
 	std::sort(arr, arr + size);
+
 }
 
 void broteforce::list::addNewY(node* other) {
 	if (first == nullptr) {
 		first = other;
 	}
+	else if (first->y > other->y) {
+		other->next = first;
+		first = other;
+	}
 	else {
-		node* now = first;
-		while (now->y > other->y && now->next != nullptr) {
-			now = now->next;
+		node* current = first;
+		while (current->y < other->y && current->next != nullptr) {
+			current = current->next;
 		}
-		if (now->next == nullptr)
-			now->next = other;
-		else if (now->next != nullptr && now->next->y != other->y) {
-			node* tmp = now->next;
-			now->next = other;
+		other->next = current->next;
+		current->next = other;
+		if (current->next == nullptr)
+			current->next = other;
+		else if (current->next != nullptr && current->next->y != other->y) {
+			node* tmp = current->next;
+			current->next = other;
 			other->next = tmp;
 		}
 		//очистить now? как бы он не нужен если дошел до конца
 	}
 	return;
+	//Крч, тут надо просмотреть
 }
 
 void broteforce::list::deleteY(node* other) {
 	node* now = first;
+	node* prev = nullptr;
 	if (first->next != nullptr) {
 		while (now->y != other->y) {
 			now = now->next;
+			if (prev == nullptr)
+				prev = first;
+			else
+				prev = prev->next;
 		}
-		node* tmp = now->next;
-		now->next = tmp->next;
-		delete tmp;
+		if (first == now) {
+			first = now->next;
+			delete now;
+		}
+		else {
+			node* tmp = now->next;
+			delete now;
+			prev->next = tmp;
+		}
 	}
-	else
+	else {
+		first = nullptr;
 		delete now;
+	}
 }
