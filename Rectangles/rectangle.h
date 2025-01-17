@@ -35,23 +35,27 @@ private:
 	Coord leftDown;
 	Coord rightUp;
 	unsigned long long intersection = 1;
+
 public:
 	rectangle(Coord leftDown = {0, 0}, Coord rightUp = {0, 0}) : leftDown(leftDown), rightUp(rightUp) {
 		this->leftDown = leftDown; this->leftDown.type = 1; this->rightUp = rightUp; this->rightUp.type = -1; }
 	~rectangle() {}
 
-	unsigned long long get_intersection() const;
-	long long getLDInterCount() const;
-	long long getRUInterCount() const;
+	//unsigned long long get_intersection() const;
+	//long long getLDInterCount() const;
+	//long long getRUInterCount() const;
+
 	Coord getCordLeftDown() const;
 	Coord getCordRightUp() const;
+	
+	/*
 	void incrementLDInterCount();
 	void incrementRUInterCount();
 	void decrementLDInterCount();
-	void decrementRUInterCount();
+	void decrementRUInterCount();*/
 	
-	void incrInter();
-	void decInter();
+	/*void incrInter();
+	void decInter();*/
 
 	bool areRectanglesIntersecting(const rectangle& B);
 	bool isInside(const rectangle& r);

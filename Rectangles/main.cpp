@@ -1,6 +1,6 @@
-#include "myalgoritm.h"
-#include "workwithfiles/workwithfiles.h"
-#include "algoritms/broteforce.h"
+//#include "myalgoritm.h"
+//#include "workwithfiles/workwithfiles.h"
+//#include "algoritms/broteforce.h"
 #include "interface.h"
 
 #include "locale.h"
@@ -11,7 +11,6 @@
 
 /*
 Таски:
-1) Изменить функцию обхода полным перебором.
 2) сделать тестовый класс. Он должен быть автоматическим (чтобы это не значило)
 3) сделать замеры времени
 4) сделать оптимизированный алгоритм
@@ -26,12 +25,12 @@ int main()
 {
     setlocale(LC_ALL, "ru");
 
-    std::vector<rectangle> rect = readFile();
-    broteforce alg(rect, 1);
-    alg.execute();
+    /*std::vector<rectangle> rect = readFile();
+    broteforce alg(rect, 3);
+    alg.execute();*/
 
-    /*interface ui;
-    ui.run();*/
+    interface ui;
+    ui.run();
 
 
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);

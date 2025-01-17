@@ -18,14 +18,16 @@ private:
 		float y;
 		int type;
 		node* next = nullptr;
+
+		node(float& val, int t) : y(val), type(t) {}
 	};
 
 	class list {
 	public:
 		node* first = nullptr;
 
-		void addNewY(node* other);
-		void deleteY(node* other);
+		void addNewY(float& val, int type);
+		void deleteY(float& val);
 	};
 
 public:
@@ -36,5 +38,3 @@ public:
 
 	void execute();
 };
-
-int getPrecision(const float& number);

@@ -10,17 +10,17 @@ std::istream& operator >> (std::istream& in, Coord& coord) {
 	return in;
 }
 
-unsigned long long rectangle::get_intersection() const {
-	return intersection;
-}
-
-long long rectangle::getLDInterCount() const {
-	return getCordLeftDown().interCount;
-}
-
-long long rectangle::getRUInterCount() const {
-	return getCordRightUp().interCount;
-}
+//unsigned long long rectangle::get_intersection() const {
+//	return intersection;
+//}
+//
+//long long rectangle::getLDInterCount() const {
+//	return getCordLeftDown().interCount;
+//}
+//
+//long long rectangle::getRUInterCount() const {
+//	return getCordRightUp().interCount;
+//}
 
 Coord rectangle::getCordLeftDown() const {
 	return leftDown;
@@ -30,21 +30,21 @@ Coord rectangle::getCordRightUp() const {
 	return rightUp;
 }
 
-void rectangle::incrementLDInterCount() {
-	leftDown.interCount++;
-}
-
-void rectangle::incrementRUInterCount() {
-	rightUp.interCount++;
-}
-
-void rectangle::decrementLDInterCount() {
-	leftDown.interCount--;
-}
-
-void rectangle::decrementRUInterCount() {
-	rightUp.interCount--;
-}
+//void rectangle::incrementLDInterCount() {
+//	leftDown.interCount++;
+//}
+//
+//void rectangle::incrementRUInterCount() {
+//	rightUp.interCount++;
+//}
+//
+//void rectangle::decrementLDInterCount() {
+//	leftDown.interCount--;
+//}
+//
+//void rectangle::decrementRUInterCount() {
+//	rightUp.interCount--;
+//}
 
 bool Coord::operator < (const Coord& c) const {
 	return X < c.X;
@@ -107,10 +107,10 @@ bool rectangle::isInside(const rectangle& r) {
 		this->getCordRightUp().Y <= r.getCordRightUp().Y);
 }
 
-void rectangle::incrInter() {
-	intersection++;
-}
-
-void rectangle::decInter() {
-	intersection--;
-}
+//void rectangle::incrInter() {
+//	intersection++;
+//}
+//
+//void rectangle::decInter() {
+//	intersection--;
+//}

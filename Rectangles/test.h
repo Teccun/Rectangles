@@ -1,15 +1,15 @@
 #pragma once
-#include "rectangle.h"
-#include "algoritms/algoritms.h"
+#include "algoritms/broteforce.h"
 
-//class Test {
-//protected:
-//	RectangleIntersectionAlgorithm alg;
-//
-//public:
-//	void test1();
-//	void test2();
-//	void test3();
-//	void test4();
-//	void test5();
-//};
+class broteforceTest {
+private:
+	void testCase1();
+	void testCase2();
+	void testCase3();
+	void testCase4();
+	void testCase5();
+
+public:
+	void runTests();
+
+};
