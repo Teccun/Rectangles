@@ -9,8 +9,8 @@
 #include <math.h>    
 #include <algorithm>
 #include <vector>
-#include <set>
-#include <map>
+
+#include <chrono>
 
 struct Coord {
 	float X;
@@ -21,11 +21,6 @@ struct Coord {
 	bool operator < (const Coord& c) const;
 
 	bool operator == (const Coord& c) const;
-
-	/*bool Coord::operator != (const Coord& c) const;
-	bool Coord::operator > (const Coord& c) const;
-	bool Coord::operator >= (const Coord& c) const;
-	bool Coord::operator <= (const Coord& c) const;*/
 };
 std::ostream& operator << (std::ostream& os, const Coord& coord);
 std::istream& operator >> (std::istream& in, Coord& coord);
@@ -34,29 +29,17 @@ class rectangle {
 private:
 	Coord leftDown;
 	Coord rightUp;
-	unsigned long long intersection = 1;
 
 public:
 	rectangle(Coord leftDown = {0, 0}, Coord rightUp = {0, 0}) : leftDown(leftDown), rightUp(rightUp) {
 		this->leftDown = leftDown; this->leftDown.type = 1; this->rightUp = rightUp; this->rightUp.type = -1; }
 	~rectangle() {}
 
-	//unsigned long long get_intersection() const;
-	//long long getLDInterCount() const;
-	//long long getRUInterCount() const;
-
 	Coord getCordLeftDown() const;
 	Coord getCordRightUp() const;
-	
-	/*
-	void incrementLDInterCount();
-	void incrementRUInterCount();
-	void decrementLDInterCount();
-	void decrementRUInterCount();*/
-	
-	/*void incrInter();
-	void decInter();*/
 
+	
+	bool containsPoint(const Coord& p);
 	bool areRectanglesIntersecting(const rectangle& B);
 	bool isInside(const rectangle& r);
 

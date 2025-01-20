@@ -1,8 +1,8 @@
 #include "workwithfiles.h"
 
-std::vector<rectangle> readFile() {
+std::vector<rectangle> readFile(std::string& namefile) {
 
-	std::ifstream in("in.txt");
+	std::ifstream in(namefile);
 	if (!in)
 		std::cout << "The file cannot be opened";
 

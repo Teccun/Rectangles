@@ -1,16 +1,31 @@
 #pragma once
-#include "myalgoritm.h"
 #include "workwithfiles/workwithfiles.h"
-#include "algoritms/broteforce.h"
+#include "algoritms/bruteforce.h"
+#include "algoritms/scanline.h"
+#include "test.h"
+#include <conio.h>
 
 using namespace std;
 
 class interface {
 protected:
 	bool running;
-	int menu = 0;
+	enum class Menu {
+		MAIN,
+		BRUTEFORCE,
+		SCANLINE,
+	};
+	Menu currentMenu;
 public:
-	interface() : running(true), menu(0) {}
+	interface() : running(true), currentMenu(Menu::MAIN) {}
+
+	void clearScreen() {
+		system("cls");
+	}
+	void waitForKeyPress() {
+		std::cout << "\nНажмите любую клавишу для продолжения...";
+		_getch();
+	}
 
 	void displayMenu();
 
@@ -18,6 +33,7 @@ public:
 
 	void handleChoiceMainMenu(int choice);
 	void handleChoiceBruteforceMenu(int choice);
+	void handleChoiceScanlineMenu(int choice);
 
 	void problemConditionUI();
 
@@ -26,9 +42,14 @@ public:
 	void broteforceTestClass();
 	void broteforceGenerate();
 
-	void returnToMainMenu();
+	//void returnToMainMenu();
 
 	void scanlineUI();
+	void scanlineReadFromFile();
+	void scanlineTestClass();
+	void scanlineGenerate();
+
+	void algorithmComparison();
 
 	void exit();
 

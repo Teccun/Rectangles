@@ -1,7 +1,7 @@
 #pragma once
 #include "algoritms.h"
 
-class broteforce : public RectangleIntersectionAlgorithm {
+class scanline : public RectangleIntersectionAlgorithm {
 private:
 	struct event {
 		float x;
@@ -26,15 +26,15 @@ private:
 	public:
 		node* first = nullptr;
 
-		void addNewY(float& val, int type);
-		void deleteY(float& val);
+		void addNewY(float& val, int type, unsigned long long int& count);
+		void deleteY(float& val, unsigned long long int& count);
 	};
 
 public:
-	broteforce(std::vector<rectangle>& r, unsigned long long k) : RectangleIntersectionAlgorithm(r, k) {}
+	scanline(std::vector<rectangle>& r, unsigned long long k) : RectangleIntersectionAlgorithm(r, k) {}
 
-	event* fillEvents(const int &size);
-	void sortEvents(event* arr, const int &size);
+	event* fillEvents(const int& size);
+	void sortEvents(event* arr, const int& size);
 
 	void execute();
 };

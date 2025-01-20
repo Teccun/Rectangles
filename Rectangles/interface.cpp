@@ -1,49 +1,77 @@
 #include "interface.h"
 
-#include <conio.h>
-
+/* Text data (menus and other information) */
 void interface::displayMenu() {
-	system("cls");
+	clearScreen();
+	printf("=== Main menu ===\n");
 	printf("1. Problem condition\n");
 	printf("2. Bruteforce\n");
 	printf("3. Scanline\n");
-	printf("4. Exit\n\n");
+	printf("4. Algorithm comparison\n");
+	printf("5. Exit\n\n");
+}
+void interface::problemConditionUI() {
+	clearScreen();
+	printf("=== Условие задачи ===\n");
+	printf("Прямоугольники\n");
+	printf("На плоскости задано N прямоугольников. Найти точки, покрытые не менее чем k из них.\n");
+	printf("Входные данные – координаты прямоугольников ( левый нижний и правый верхний угол) и k.\n");
+	printf("Выход – координаты прямоугольников, образованные точками, покрытыми не менее чем k прямоугольниками.\n");
+	waitForKeyPress();
+}
+void interface::broteforceUI() {
+	clearScreen();
+	printf("=== Brute-force method menu ===\n");
+	printf("1. Read rectangles from file\n");
+	printf("2. Use standart tests\n");
+	printf("3. Generate random rectangles for test\n");
+	printf("4. Return to Main menu\n\n");
+}
+void interface::scanlineUI() {
+	clearScreen();
+	printf("=== Scanline method menu ===\n");
+	printf("1. Read rectangles from file\n");
+	printf("2. Use standart tests\n");
+	printf("3. Generate random rectangles for test\n");
+	printf("4. Return to Main menu\n\n");
 }
 
+/* Catching the user's choice */
 int interface::getUserChoice() {
 	int choice = 0;
-	std::cout << "-> ";
-	std::cin >> choice;
+	std::cout << "Enter: ";
 
-	if (std::cin.fail()) {
+	if (!(std::cin >> choice)) {
 		std::cin.clear();
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		system("cls");
 		return -1;
 	}
 
-	return (choice);
+	return choice;
 }
 
+/* Handling user selection */
 void interface::handleChoiceMainMenu(int choice) {
-	switch (choice){
+	switch (choice) {
 	case 1:
 		problemConditionUI();
 		break;
 	case 2:
-		broteforceUI();
-		menu = 1;
+		currentMenu = Menu::BRUTEFORCE;
 		break;
 	case 3:
-		scanlineUI();
-		menu = 2;
+		currentMenu = Menu::SCANLINE;
 		break;
 	case 4:
+		algorithmComparison();
+		break;
+	case 5:
 		exit();
 		break;
 	default:
-		std::cout << "Неверный выбор. Попробуйет снова.\n";
-		_getch();
+		printf("Неверный выбор. Попробуйет снова.\n");
+		waitForKeyPress();
 		break;
 	}
 }
@@ -59,94 +87,145 @@ void interface::handleChoiceBruteforceMenu(int choice) {
 		broteforceGenerate();
 		break;
 	case 4:
-		returnToMainMenu();
+		currentMenu = Menu::MAIN;
 		break;
 	default:
 		std::cout << "Неверный выбор. Попробуйте снова.\n";
-		_getch();
+		waitForKeyPress();
+		break;
+	}
+}
+void interface::handleChoiceScanlineMenu(int choice) {
+	switch (choice) {
+	case 1:
+		scanlineReadFromFile();
+		break;
+	case 2:
+		scanlineTestClass();
+		break;
+	case 3:
+		scanlineGenerate();
+		break;
+	case 4:
+		currentMenu = Menu::MAIN;
+		break;
+	default:
+		std::cout << "Неверный выбор. Попробуйте снова.\n";
+		waitForKeyPress();
 		break;
 	}
 }
 
-
-void interface::problemConditionUI() {
-	system("cls");
-	std::cout << "Прямоугольники\n";
-	std::cout << "На плоскости задано N прямоугольников. Найти точки, покрытые не менее чем k из них.\n";
-	std::cout << "Входные данные – координаты прямоугольников ( левый нижний и правый верхний угол) и k.\n";
-	std::cout << "Выход – координаты прямоугольников, образованные точками, покрытыми не менее чем k прямоугольниками.\n";
-
-	std::cout << "\n";
-	std::cout << "Нажмите на любую клавишу для выхода.\n";
-	_getch();
-
-	return;
-}
-
-void interface::returnToMainMenu() {
-	system("cls");
-	menu = 0;
-	return;
-}
-
-void interface::broteforceUI() {
-	system("cls");
-	printf("1. Read rectangles from file\n");
-	printf("2. Use standart tests\n");
-	printf("3. Generate random rectangles for test\n");
-	printf("4. <--\n\n");
-	return;
-}
+/* Reading data from .txt file */
 void interface::broteforceReadFromFile() {
-	system("cls");
-	std::cout << "Используйте файл in.txt для записывания данных\n";
-	std::cout << "Нажмите любую клавишу после записи информации\n";
-	std::cout << "(Просьба записывать данные правильно: x1 y1 x2 y2 - числа с плавающей точкой)\n";
-	_getch();
+	clearScreen();
+	printf("=== Read from file ===\n");
+	printf("Введите файл с расширением .txt, в котором находися информация\n");
+	printf("(Просьба записывать данные правильно: x1 y1 x2 y2 - числа с плавающей точкой)\n"); std::string namefile;
+	std::cin >> namefile;
 
-	std::vector<rectangle> rect = readFile();
-	std::cout << "\nВведите значение k.\n";
+	std::vector<rectangle> rect = readFile(namefile);
+	std::cout << "\nВведите значение k: ";
 
 	int k;
 	std::cin >> k;
-	broteforce alg(rect, k);
+	bruteforce alg(rect, k);
 	alg.execute();
-
-	std::cout << "\nНажмите любую клваишу, чтобы вернуться.\n";
-	_getch();
-	return;
+	waitForKeyPress();
 }
+/* Program operation on standard tests */
 void interface::broteforceTestClass() {
-
+	clearScreen();
+	Test tests;
+	tests.runTests(AlgType::BRUTEFORCE);
+	waitForKeyPress();
 }
+/* Running the program on a randomly generated set of N rectangles in a given area. */
 void interface::broteforceGenerate() {
-
+	clearScreen();
+	printf("=== Brote-force with random rectangles ===\n");
+	printf("Введи (целое) число прямоугольников и границы (minX, maxX, minY, maxY тип float) для возможной генерации\n");
+	float minX, maxX, minY, maxY;
+	unsigned long long int N;
+	std::cin >> N >> minX >> maxX >> minY >> maxY;
+	std::vector<rectangle> rect = generateRectangles(N, minX, maxX, minY, maxY);
+	Test tests;
+	tests.generateTest(AlgType::BRUTEFORCE, rect);
+	waitForKeyPress();
 }
 
-void interface::scanlineUI() {
-	return;
+void interface::scanlineReadFromFile() {
+	clearScreen();
+	printf("=== Read from file ===\n");
+	printf("Введите файл с расширением .txt, в котором находися информация\n");
+	printf("(Просьба записывать данные правильно: x1 y1 x2 y2 - числа с плавающей точкой)\n"); std::string namefile;
+	std::cin >> namefile;
+
+	std::vector<rectangle> rect = readFile(namefile);
+	std::cout << "\nВведите значение k: ";
+
+	int k;
+	std::cin >> k;
+	scanline alg(rect, k);
+	alg.execute();
+	waitForKeyPress();
+}
+void interface::scanlineTestClass() {
+	clearScreen();
+	Test tests;
+	tests.runTests(AlgType::SCANLINE);
+	waitForKeyPress();
+}
+void interface::scanlineGenerate() {
+	clearScreen();
+	printf("=== Scanline with random rectangles ===\n");
+	printf("Введи (целое) число прямоугольников и границы (minX, maxX, minY, maxY тип float) для возможной генерации\n");
+	float minX, maxX, minY, maxY;
+	unsigned long long int N;
+	std::cin >> N >> minX >> maxX >> minY >> maxY;
+	std::vector<rectangle> rect = generateRectangles(N, minX, maxX, minY, maxY);
+	Test tests;
+	tests.generateTest(AlgType::SCANLINE, rect);
+	waitForKeyPress();
 }
 
+void interface::algorithmComparison() {
+	clearScreen();
+	printf("=== Algorithm comparison ===\n");
+	printf("Введи (целое) число прямоугольников и границы (minX, maxX, minY, maxY тип float) для возможной генерации\n");
+	float minX, maxX, minY, maxY;
+	unsigned long long int N;
+	std::cin >> N >> minX >> maxX >> minY >> maxY;
+	std::vector<rectangle> rect = generateRectangles(N, minX, maxX, minY, maxY);
+	Test tests;
+	printf("\n=======================================\n");
+	tests.generateTest(AlgType::BRUTEFORCE, rect);
+	printf("\n=======================================\n");
+	tests.generateTest(AlgType::SCANLINE, rect);
+	printf("\n=======================================\n");
+	waitForKeyPress();
+}
+/* End of program */
 void interface::exit() {
-	system("cls");
+	clearScreen();
 	running = false;
-	return;
 }
 
+/* Program start and main handler */
 void interface::run() {
 	while (running) {
-		if (menu == 0)
+		switch (currentMenu) {
+		case Menu::MAIN:
 			displayMenu();
-		if (menu == 1)
+			handleChoiceMainMenu(getUserChoice());
+			break;
+		case Menu::BRUTEFORCE:
 			broteforceUI();
-		int choice = getUserChoice();
-		if (choice != -1) {
-			if (menu == 0)
-				handleChoiceMainMenu(choice);
-			if (menu == 1) 
-				handleChoiceBruteforceMenu(choice);
-			if (menu == 2)
-				menu = 0;
+			handleChoiceBruteforceMenu(getUserChoice());
+			break;
+		case Menu::SCANLINE:
+			scanlineUI();
+			handleChoiceScanlineMenu(getUserChoice());
 		}
 	}
 }
