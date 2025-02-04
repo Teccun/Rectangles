@@ -24,4 +24,5 @@ private:
 public:
 	void runTests(AlgType type);
 	void generateTest(AlgType type, std::vector<rectangle>& rect);
+	void compareTest(AlgType type, std::vector<rectangle>& rect);
 };

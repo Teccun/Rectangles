@@ -8,7 +8,8 @@ void interface::displayMenu() {
 	printf("2. Bruteforce\n");
 	printf("3. Scanline\n");
 	printf("4. Algorithm comparison\n");
-	printf("5. Exit\n\n");
+	printf("5. Algorithm base comparison\n");
+	printf("6. Exit\n\n");
 }
 void interface::problemConditionUI() {
 	clearScreen();
@@ -67,6 +68,9 @@ void interface::handleChoiceMainMenu(int choice) {
 		algorithmComparison();
 		break;
 	case 5:
+		algorithmBaseComparison();
+		break;
+	case 6:
 		exit();
 		break;
 	default:
@@ -205,6 +209,21 @@ void interface::algorithmComparison() {
 	printf("\n=======================================\n");
 	waitForKeyPress();
 }
+void interface::algorithmBaseComparison() {
+	clearScreen();
+	for (int i = 300; i <= 300; i += 10) {
+		std::vector<rectangle> rect = generateRectangles(i, 0, 50, 0, 50);
+		Test tests;
+		printf("\n=== N - %d ===\n", i);
+		printf("\n=======================================\n");
+		tests.compareTest(AlgType::BRUTEFORCE, rect);
+		printf("\n=======================================\n");
+		tests.compareTest(AlgType::SCANLINE, rect);
+		printf("\n=======================================\n");
+	}
+	waitForKeyPress();
+}
+
 /* End of program */
 void interface::exit() {
 	clearScreen();

@@ -50,6 +50,7 @@ public:
 	void scanlineGenerate();
 
 	void algorithmComparison();
+	void algorithmBaseComparison();
 
 	void exit();
 

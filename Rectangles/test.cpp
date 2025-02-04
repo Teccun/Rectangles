@@ -62,6 +62,23 @@ void Test::runSingleTest(std::vector<rectangle>& rect, const std::string& testNa
 	}
 }
 
+void Test::compareTest(AlgType type, std::vector<rectangle>& rect) {
+	printf("\n     Compare    \n");
+	switch (type) {
+	case AlgType::BRUTEFORCE: {
+		bruteforce alg(rect, 1);
+		alg.execute();
+		break;
+	}
+	case AlgType::SCANLINE: {
+		scanline alg(rect, 1);
+		alg.execute();
+		break;
+	}
+	}
+	printf("\n");
+}
+
 void Test::testCase1(AlgType type) {
 	std::vector<rectangle> rect = {
 		{{-1.5, 0.5}, {2, 1.5}},

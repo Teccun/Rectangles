@@ -3,45 +3,39 @@
 
 class bruteforce : public RectangleIntersectionAlgorithm {
 private:
-	struct point {
-		float X, Y;
+	struct event {
+		float x, y1, y2;
 		int type;
-		int rectInd;
-
-		bool operator < (const point& other) const {
-			return X < other.X || Y < other.Y || type > other.type;
-		}
-	};
-	
-	struct activeRect {
-		rectangle rect;
-		bool active;
 	};
 
-	point* points;
-	int pointsCount;
-	activeRect* actRects;
-	int actRectCount = 0;
-	int maxActRect;
+	event* events;
+	unsigned int sizeEvents = 0;
 
-	void initPoints();
-	bool checkInters(rectangle& cur, rectangle& other);
-	void findInterArea(activeRect* actRects, int count, rectangle* res, int& resultCount);
-	void insertSort(point* arr, int n);
+	struct node {
+	public:
+		float y;
+		int type;
+		node* next = nullptr;
 
+		node(float& val, int t) : y(val), type(t) {}
+	};
+
+	class list {
+	public:
+		node* first = nullptr;
+
+		void addNewY(float& val, int type, unsigned long long int& count);
+		void deleteY(float& val, unsigned long long int& count);
+		void clear();
+	};
 
 public:
-	bruteforce(std::vector<rectangle>& r, unsigned long long k) : RectangleIntersectionAlgorithm(r, k) {
-		pointsCount = numRect * 2;
-		points = new point[pointsCount];
-		maxActRect = numRect;
-		actRects = new activeRect[maxActRect];
-		actRectCount = 0;
-	}
+	bruteforce(std::vector<rectangle>& r, unsigned long long k);
 	~bruteforce() {
-		delete[] points;
-		delete[] actRects;
+		delete[] events;
 	}
 	
+	void bubbleSort();
+
 	void execute();
 };
