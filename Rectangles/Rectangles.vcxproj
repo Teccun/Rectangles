@@ -134,8 +134,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="algoritms\bruteforce.cpp" />
-    <ClCompile Include="algoritms\scanline.cpp" />
+    <ClCompile Include="algoritms\native.cpp" />
+    <ClCompile Include="algoritms\scanline_bruteforce.cpp" />
+    <ClCompile Include="algoritms\scanline_fast.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="rectangle.cpp" />
@@ -144,8 +145,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algoritms\algoritms.h" />
-    <ClInclude Include="algoritms\bruteforce.h" />
-    <ClInclude Include="algoritms\scanline.h" />
+    <ClInclude Include="algoritms\native.h" />
+    <ClInclude Include="algoritms\scanline_bruteforce.h" />
+    <ClInclude Include="algoritms\scanline_fast.h" />
     <ClInclude Include="interface.h" />
     <ClInclude Include="rectangle.h" />
     <ClInclude Include="test.h" />

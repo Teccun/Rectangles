@@ -1,12 +1,12 @@
-#include "scanline.h"
+#include "scanline_bruteforce.h"
 
-void scanline::execute() {
-	
+void scanline_bruteforce::execute() {
+
 	auto start = std::chrono::high_resolution_clock::now();
 
 	if (numRect == 0)
 		return;
-	event* events_arr = fillEvents(numRect * 2);
+	event* events_arr = fillEvents(numRect);
 	sortEvents(events_arr, numRect * 2);
 
 	list activeYStart, activeYEnd;
@@ -41,6 +41,7 @@ void scanline::execute() {
 			node* itEnd = activeYEnd.first->next;
 
 			int countYLines = 0;
+			/*Причиина всех моих несчастий. Получается, тут я обхожу всё что у меня скапливается в списке. В худшем случае это все. Внутри ещё полная проверка на повторы идет*/
 			while (itEnd != nullptr) {
 				float y1 = itStart->y;
 				float y2 = itEnd->y;
@@ -57,7 +58,6 @@ void scanline::execute() {
 						for (int j = 0; j < countResultRect; j++) {
 							if (newRect.isInside(result[j])) {
 								isDuplicate = true;
-								stdoper += 4;
 								break;
 							}
 							stdoper++;
@@ -95,7 +95,7 @@ void scanline::execute() {
 	delete[] events_arr;
 }
 
-scanline::event* scanline::fillEvents(const int& size) {
+scanline_bruteforce::event* scanline_bruteforce::fillEvents(const int& size) {
 	event* ev_arr = new event[size * 2];
 	for (int i = 0; i < size; i++) {
 		event newStartEvent;
@@ -113,12 +113,12 @@ scanline::event* scanline::fillEvents(const int& size) {
 	return ev_arr;
 }
 
-void scanline::sortEvents(event* arr, const int& size) {
+void scanline_bruteforce::sortEvents(event* arr, const int& size) {
 	std::sort(arr, arr + size);
 	stdoper += (size * std::log2(size));
 }
 
-void scanline::list::addNewY(float& val, int type, unsigned long long int& count) {
+void scanline_bruteforce::list::addNewY(float& val, int type, unsigned long long int& count) {
 	node* newNode = new node(val, type);
 
 	if (first == nullptr || first->y >= val) {
@@ -136,7 +136,7 @@ void scanline::list::addNewY(float& val, int type, unsigned long long int& count
 	}
 }
 
-void scanline::list::deleteY(float& val, unsigned long long int& count) {
+void scanline_bruteforce::list::deleteY(float& val, unsigned long long int& count) {
 	if (first == nullptr) {
 		return;
 	}

@@ -1,7 +1,8 @@
 #pragma once
 #include "workwithfiles/workwithfiles.h"
-#include "algoritms/bruteforce.h"
-#include "algoritms/scanline.h"
+#include "algoritms/scanline_bruteforce.h"
+#include "algoritms/scanline_fast.h"
+#include "algoritms/native.h"
 #include "test.h"
 #include <conio.h>
 
@@ -51,6 +52,7 @@ public:
 
 	void algorithmComparison();
 	void algorithmBaseComparison();
+	void algorithmProgressivComparison();
 
 	void exit();
 

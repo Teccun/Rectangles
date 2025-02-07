@@ -1,26 +1,22 @@
-#include "bruteforce.h"
+#include "scanline_fast.h"
 
-bruteforce::bruteforce(std::vector<rectangle>& r, unsigned long long k) : RectangleIntersectionAlgorithm(r, k) {
+scanline_fast::scanline_fast(std::vector<rectangle>& r, unsigned long long k) : RectangleIntersectionAlgorithm(r, k) {
 	sizeEvents = numRect * 2;
 	events = new event[sizeEvents];
 
 	for (int i = 0; i < numRect; i++) {
 		event newStart;
 		newStart.x = rectangles_arr[i].getCordLeftDown().X;
-		newStart.y1 = rectangles_arr[i].getCordLeftDown().Y;
-		newStart.y2 = rectangles_arr[i].getCordRightUp().Y;
 		newStart.type = 1;
 		event newEnd;
 		newEnd.x = rectangles_arr[i].getCordRightUp().X;
-		newEnd.y1 = rectangles_arr[i].getCordLeftDown().Y;
-		newEnd.y2 = rectangles_arr[i].getCordRightUp().Y;
 		newEnd.type = -1;
 		events[2 * i] = newStart;
 		events[2 * i + 1] = newEnd;
 	}
 }
 
-void bruteforce::bubbleSort() {
+void scanline_fast::bubbleSort() {
 	event tmp;
 	for (int i = 0; i < sizeEvents - 1; i++) {
 		for (int j = 0; j < sizeEvents - 1; j++) {
@@ -34,23 +30,19 @@ void bruteforce::bubbleSort() {
 	}
 }
 
-void bruteforce::execute() {
+void scanline_fast::execute() {
 	auto start = std::chrono::high_resolution_clock::now();
 	bubbleSort();
-	
-	float* yCoords = new float[numRect * 2];
-	for (int i = 0; i < numRect; i++) {
-		yCoords[2 * i] = rectangles_arr[i].getCordLeftDown().Y;
-		yCoords[2 * i + 1] = rectangles_arr[i].getCordRightUp().Y;
-		stdoper++;
-	}
-	std::sort(yCoords, yCoords + numRect * 2);
+
+	/*Выигрышь в скорости получается в том, что заранее известры все "события"*/
 
 	list yList;
 
-	for (int i = 0; i < sizeEvents; i++) {
-		float y1 = events[i].y1;
-		float y2 = events[i].y2;
+	/*Хммм... можно избавиться от верхнего создания массива и оставить просто сразу сортировку вставками. Да так будет лучше Плюс - увеличение скорости выполнения алгоритма*/
+	for (int i = 0; i < numRect; i++) {
+
+		float y1 = rectangles_arr[i].getCordLeftDown().Y;
+		float y2 = rectangles_arr[i].getCordRightUp().Y;
 
 		bool y1Ex = false;
 		bool y2Ex = false;
@@ -83,7 +75,7 @@ void bruteforce::execute() {
 			if (x1 == x2)
 				continue;
 			Coord midP = { (x1 + x2) / 2, (y1 + y2) / 2 };
-			
+
 			int coverCount = 0;
 			for (int j = 0; j < numRect; j++) {
 				if (rectangles_arr[j].containsPoint(midP))
@@ -106,7 +98,6 @@ void bruteforce::execute() {
 		stdoper++;
 	}
 
-	delete[] yCoords;
 	yList.clear();
 
 	auto end = std::chrono::high_resolution_clock::now();
@@ -117,7 +108,7 @@ void bruteforce::execute() {
 	std::cout << float(duration.count()) / float(stdoper) << '\n';
 }
 
-void bruteforce::list::addNewY(float& val, int type, unsigned long long int& count) {
+void scanline_fast::list::addNewY(float& val, int type, unsigned long long int& count) {
 	node* newNode = new node(val, type);
 
 	if (first == nullptr || first->y >= val) {
@@ -135,7 +126,7 @@ void bruteforce::list::addNewY(float& val, int type, unsigned long long int& cou
 	}
 }
 
-void bruteforce::list::deleteY(float& val, unsigned long long int& count) {
+void scanline_fast::list::deleteY(float& val, unsigned long long int& count) {
 	if (first == nullptr) {
 		return;
 	}
@@ -159,7 +150,7 @@ void bruteforce::list::deleteY(float& val, unsigned long long int& count) {
 	delete tmp;
 }
 
-void bruteforce::list::clear() {
+void scanline_fast::list::clear() {
 	node* tmp = first;
 	while (first != nullptr) {
 		first = first->next;

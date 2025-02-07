@@ -1,10 +1,10 @@
 #pragma once
 #include "algoritms.h"
 
-class bruteforce : public RectangleIntersectionAlgorithm {
+class scanline_fast : public RectangleIntersectionAlgorithm {
 private:
 	struct event {
-		float x, y1, y2;
+		float x;
 		int type;
 	};
 
@@ -30,11 +30,11 @@ private:
 	};
 
 public:
-	bruteforce(std::vector<rectangle>& r, unsigned long long k);
-	~bruteforce() {
+	scanline_fast(std::vector<rectangle>& r, unsigned long long k);
+	~scanline_fast() {
 		delete[] events;
 	}
-	
+
 	void bubbleSort();
 
 	void execute();

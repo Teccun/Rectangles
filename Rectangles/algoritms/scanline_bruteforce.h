@@ -1,7 +1,8 @@
 #pragma once
+#pragma once
 #include "algoritms.h"
 
-class scanline : public RectangleIntersectionAlgorithm {
+class scanline_bruteforce : public RectangleIntersectionAlgorithm {
 private:
 	struct event {
 		float x;
@@ -31,7 +32,7 @@ private:
 	};
 
 public:
-	scanline(std::vector<rectangle>& r, unsigned long long k) : RectangleIntersectionAlgorithm(r, k) {}
+	scanline_bruteforce(std::vector<rectangle>& r, unsigned long long k) : RectangleIntersectionAlgorithm(r, k) {}
 
 	event* fillEvents(const int& size);
 	void sortEvents(event* arr, const int& size);

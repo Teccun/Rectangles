@@ -5,11 +5,12 @@ void interface::displayMenu() {
 	clearScreen();
 	printf("=== Main menu ===\n");
 	printf("1. Problem condition\n");
-	printf("2. Bruteforce\n");
-	printf("3. Scanline\n");
+	printf("2. Scanline Bruteforce\n");
+	printf("3. Scanline fast\n");
 	printf("4. Algorithm comparison\n");
 	printf("5. Algorithm base comparison\n");
-	printf("6. Exit\n\n");
+	printf("6. Algorithm progressive comparison\n");
+	printf("7. Exit\n\n");
 }
 void interface::problemConditionUI() {
 	clearScreen();
@@ -22,7 +23,7 @@ void interface::problemConditionUI() {
 }
 void interface::broteforceUI() {
 	clearScreen();
-	printf("=== Brute-force method menu ===\n");
+	printf("=== Scanline Brute-force method menu ===\n");
 	printf("1. Read rectangles from file\n");
 	printf("2. Use standart tests\n");
 	printf("3. Generate random rectangles for test\n");
@@ -30,7 +31,7 @@ void interface::broteforceUI() {
 }
 void interface::scanlineUI() {
 	clearScreen();
-	printf("=== Scanline method menu ===\n");
+	printf("=== Scanline fast method menu ===\n");
 	printf("1. Read rectangles from file\n");
 	printf("2. Use standart tests\n");
 	printf("3. Generate random rectangles for test\n");
@@ -71,6 +72,9 @@ void interface::handleChoiceMainMenu(int choice) {
 		algorithmBaseComparison();
 		break;
 	case 6:
+		algorithmProgressivComparison();
+		break;
+	case 7:
 		exit();
 		break;
 	default:
@@ -133,7 +137,7 @@ void interface::broteforceReadFromFile() {
 
 	int k;
 	std::cin >> k;
-	bruteforce alg(rect, k);
+	scanline_bruteforce alg(rect, k);
 	alg.execute();
 	waitForKeyPress();
 }
@@ -147,7 +151,7 @@ void interface::broteforceTestClass() {
 /* Running the program on a randomly generated set of N rectangles in a given area. */
 void interface::broteforceGenerate() {
 	clearScreen();
-	printf("=== Brote-force with random rectangles ===\n");
+	printf("=== Scanline Brote-force with random rectangles ===\n");
 	printf("¬веди (целое) число пр€моугольников и границы (minX, maxX, minY, maxY тип float) дл€ возможной генерации\n");
 	float minX, maxX, minY, maxY;
 	unsigned long long int N;
@@ -170,7 +174,7 @@ void interface::scanlineReadFromFile() {
 
 	int k;
 	std::cin >> k;
-	scanline alg(rect, k);
+	scanline_fast alg(rect, k);
 	alg.execute();
 	waitForKeyPress();
 }
@@ -182,7 +186,7 @@ void interface::scanlineTestClass() {
 }
 void interface::scanlineGenerate() {
 	clearScreen();
-	printf("=== Scanline with random rectangles ===\n");
+	printf("=== Scanline fast with random rectangles ===\n");
 	printf("¬веди (целое) число пр€моугольников и границы (minX, maxX, minY, maxY тип float) дл€ возможной генерации\n");
 	float minX, maxX, minY, maxY;
 	unsigned long long int N;
@@ -211,15 +215,45 @@ void interface::algorithmComparison() {
 }
 void interface::algorithmBaseComparison() {
 	clearScreen();
-	for (int i = 300; i <= 300; i += 10) {
+	for (int i = 100; i <= 200; i += 100) {
 		std::vector<rectangle> rect = generateRectangles(i, 0, 50, 0, 50);
 		Test tests;
 		printf("\n=== N - %d ===\n", i);
-		printf("\n=======================================\n");
+		printf("=scanline_bruteforce=\n");
 		tests.compareTest(AlgType::BRUTEFORCE, rect);
-		printf("\n=======================================\n");
+		printf("=scanine fast=\n");
 		tests.compareTest(AlgType::SCANLINE, rect);
-		printf("\n=======================================\n");
+		printf("=======================================\n");
+		rect.clear();
+	}
+	waitForKeyPress();
+}
+void interface::algorithmProgressivComparison() {
+	clearScreen();
+	int count = 5;
+	std::vector<rectangle> rect;
+	for (int i = 1; i <= 5; i++) {
+		Coord ld = { 0, 0 };
+		Coord ru = { i, i };
+		rectangle newRect = { ld, ru };
+		rect.push_back(newRect);
+	}
+	for (int i = 10; i <= 5000; i += 10) {
+		Coord ld = { 0, 0 };
+		Coord ru = { i, i };
+		rectangle newRect = { ld, ru };
+		rect.push_back(newRect);
+		count++;
+		Test tests;
+		for (int k = 1; k < count; k++) {
+			printf("\n=== N - %d K - %d===\n", i, k);
+			printf("=scanline_bruteforce=\n");
+			tests.progressiveTest(AlgType::BRUTEFORCE, rect, k);
+			printf("=scanine fast=\n");
+			tests.progressiveTest(AlgType::SCANLINE, rect, k);
+			printf("=======================================\n");
+		}
+		printf("\n------------------------------------------------------------------\n");
 	}
 	waitForKeyPress();
 }

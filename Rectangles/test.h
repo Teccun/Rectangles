@@ -1,6 +1,6 @@
 #pragma once
-#include "algoritms/bruteforce.h"
-#include "algoritms/scanline.h"
+#include "algoritms/scanline_bruteforce.h"
+#include "algoritms/scanline_fast.h"
 enum class AlgType {
 	BRUTEFORCE,
 	SCANLINE
@@ -18,11 +18,15 @@ private:
 	void testCase4(AlgType type);
 	void testCase5(AlgType type);
 	void testCase6(AlgType type);
+	void testCase7(AlgType type);
+	void testCase8(AlgType type);
+	void testCase9(AlgType type);
 
-	void runSingleTest(std::vector<rectangle>& rect, const std::string& testName, AlgType type);
+	void runSingleTest(std::vector<rectangle>& const rect, const std::string& testName, AlgType type);
 
 public:
 	void runTests(AlgType type);
 	void generateTest(AlgType type, std::vector<rectangle>& rect);
 	void compareTest(AlgType type, std::vector<rectangle>& rect);
+	void progressiveTest(AlgType type, std::vector<rectangle>& rect, int& k);
 };

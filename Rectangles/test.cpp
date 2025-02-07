@@ -42,18 +42,18 @@ void Test::generateTest(AlgType type, std::vector<rectangle>& rect) {
 	runSingleTest(rect, "Random generation", type);
 }
 
-void Test::runSingleTest(std::vector<rectangle>& rect, const std::string& testName, AlgType type) {
+void Test::runSingleTest(std::vector<rectangle>& const rect, const std::string& testName, AlgType type) {
 	printf("\n    %s    \n", testName.c_str());
 	for (unsigned long long k = 1; k <= rect.size() * 2; k++) {
 		printf("\n K = %llu :\n", k);
 		switch (type) {
 		case AlgType::BRUTEFORCE: {
-			bruteforce alg(rect, k);
+			scanline_bruteforce alg(rect, k);
 			alg.execute();
 			break;
 		}
 		case AlgType::SCANLINE: {
-			scanline alg(rect, k);
+			scanline_fast alg(rect, k);
 			alg.execute();
 			break;
 		}
@@ -66,12 +66,29 @@ void Test::compareTest(AlgType type, std::vector<rectangle>& rect) {
 	printf("\n     Compare    \n");
 	switch (type) {
 	case AlgType::BRUTEFORCE: {
-		bruteforce alg(rect, 1);
+		scanline_bruteforce alg(rect, 1);
 		alg.execute();
 		break;
 	}
 	case AlgType::SCANLINE: {
-		scanline alg(rect, 1);
+		scanline_fast alg(rect, 1);
+		alg.execute();
+		break;
+	}
+	}
+	printf("\n");
+}
+
+void Test::progressiveTest(AlgType type, std::vector<rectangle>& rect, int& k) {
+	printf("\n");
+	switch (type) {
+	case AlgType::BRUTEFORCE: {
+		scanline_bruteforce alg(rect, k);
+		alg.execute();
+		break;
+	}
+	case AlgType::SCANLINE: {
+		scanline_fast alg(rect, k);
 		alg.execute();
 		break;
 	}
@@ -134,6 +151,30 @@ void Test::testCase6(AlgType type) {
 	runSingleTest(rect, "ÒÅÑÒ 6", type);
 }
 
+void Test::testCase7(AlgType type) {
+	std::vector<rectangle> rect = {
+		{{0, 0}, {2, 3}},
+		{{3, 0}, {5, 3}}
+	};
+	runSingleTest(rect, "ÒÅÑÒ 7", type);
+}
+
+void Test::testCase8(AlgType type) {
+	std::vector<rectangle> rect = {
+		{{0, 0}, {2, 2}},
+		{{3, 1}, {5, 3}}
+	};
+	runSingleTest(rect, "ÒÅÑÒ 8", type);
+}
+
+void Test::testCase9(AlgType type) {
+	std::vector<rectangle> rect = {
+		{{0, 0}, {2, 2}},
+		{{0, 3}, {2, 5}}
+	};
+	runSingleTest(rect, "ÒÅÑÒ 9", type);
+}
+
 void  Test::runTests(AlgType type) {
 	testCase1(type);
 	testCase2(type);
@@ -141,4 +182,7 @@ void  Test::runTests(AlgType type) {
 	testCase4(type);
 	testCase5(type);
 	testCase6(type);
+	testCase7(type);
+	testCase8(type);
+	testCase9(type);
 }
