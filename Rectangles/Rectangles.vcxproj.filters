@@ -22,16 +22,13 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="myalgoritm.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="workwithfiles\workwithfiles.cpp">
       <Filter>Исходные файлы\Работа с файлами</Filter>
     </ClCompile>
     <ClCompile Include="interface.cpp">
       <Filter>Исходные файлы\Интерфейс</Filter>
     </ClCompile>
-    <ClCompile Include="algoritms\broteforce.cpp">
+    <ClCompile Include="algoritms\scanline_bruteforce.cpp">
       <Filter>Исходные файлы\Алгоритмы</Filter>
     </ClCompile>
     <ClCompile Include="rectangle.cpp">
@@ -40,11 +37,14 @@
     <ClCompile Include="test.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="algoritms\scanline_fast.cpp">
+      <Filter>Исходные файлы\Алгоритмы</Filter>
+    </ClCompile>
+    <ClCompile Include="algoritms\native.cpp">
+      <Filter>Исходные файлы\Алгоритмы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="myalgoritm.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="workwithfiles\workwithfiles.h">
       <Filter>Исходные файлы\Работа с файлами</Filter>
     </ClInclude>
@@ -54,7 +54,7 @@
     <ClInclude Include="algoritms\algoritms.h">
       <Filter>Исходные файлы\Алгоритмы</Filter>
     </ClInclude>
-    <ClInclude Include="algoritms\broteforce.h">
+    <ClInclude Include="algoritms\scanline_bruteforce.h">
       <Filter>Исходные файлы\Алгоритмы</Filter>
     </ClInclude>
     <ClInclude Include="rectangle.h">
@@ -62,6 +62,12 @@
     </ClInclude>
     <ClInclude Include="test.h">
       <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="algoritms\scanline_fast.h">
+      <Filter>Исходные файлы\Алгоритмы</Filter>
+    </ClInclude>
+    <ClInclude Include="algoritms\native.h">
+      <Filter>Исходные файлы\Алгоритмы</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

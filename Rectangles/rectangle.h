@@ -1,13 +1,17 @@
 #pragma once
-#include <vector>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fstream>   
+#include <iostream>  
+#include <string>    
+#include <iomanip>   // manipulator
+#include <sstream>   // string stream
+#include <math.h>    
 #include <algorithm>
-#include <string>
-#include <fstream>
-#include <math.h>
-#include "rectangle.h"
-#include <ctime>
-#include <iostream>
+#include <vector>
+#include <cmath>
 
+#include <chrono>
 
 struct Coord {
 	float X;
@@ -18,11 +22,6 @@ struct Coord {
 	bool operator < (const Coord& c) const;
 
 	bool operator == (const Coord& c) const;
-
-	/*bool Coord::operator != (const Coord& c) const;
-	bool Coord::operator > (const Coord& c) const;
-	bool Coord::operator >= (const Coord& c) const;
-	bool Coord::operator <= (const Coord& c) const;*/
 };
 std::ostream& operator << (std::ostream& os, const Coord& coord);
 std::istream& operator >> (std::istream& in, Coord& coord);
@@ -31,26 +30,19 @@ class rectangle {
 private:
 	Coord leftDown;
 	Coord rightUp;
-	unsigned long long intersection = 0;
+
 public:
 	rectangle(Coord leftDown = {0, 0}, Coord rightUp = {0, 0}) : leftDown(leftDown), rightUp(rightUp) {
 		this->leftDown = leftDown; this->leftDown.type = 1; this->rightUp = rightUp; this->rightUp.type = -1; }
 	~rectangle() {}
 
-	unsigned long long get_intersection() const;
-	long long getLDInterCount() const;
-	long long getRUInterCount() const;
 	Coord getCordLeftDown() const;
 	Coord getCordRightUp() const;
-	void incrementLDInterCount();
-	void incrementRUInterCount();
-	void decrementLDInterCount();
-	void decrementRUInterCount();
-	
-	void incrInter();
-	void decInter();
 
+	
+	bool containsPoint(const Coord& p);
 	bool areRectanglesIntersecting(const rectangle& B);
+	bool isInside(const rectangle& r);
 
 	friend std::ostream& operator << (std::ostream& os, const rectangle& rect);
 	friend std::istream& operator >> (std::istream& in, rectangle& rect);
@@ -59,11 +51,6 @@ public:
 	bool operator < (const rectangle& rect) const;
 
 	bool operator == (const rectangle& rect) const;
-
-	/*bool operator != (const rectangle& rect) const;
-	bool operator > (const rectangle& rect) const;
-	bool operator >= (const rectangle& rect) const;
-	bool operator <= (const rectangle& rect) const;*/
 };
 std::ostream& operator << (std::ostream& os, const rectangle& rect);
 std::istream& operator >> (std::istream& in, rectangle& rect);

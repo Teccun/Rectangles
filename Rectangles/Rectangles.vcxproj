@@ -105,10 +105,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -119,18 +122,22 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="algoritms\broteforce.cpp" />
+    <ClCompile Include="algoritms\native.cpp" />
+    <ClCompile Include="algoritms\scanline_bruteforce.cpp" />
+    <ClCompile Include="algoritms\scanline_fast.cpp" />
     <ClCompile Include="interface.cpp" />
-    <ClCompile Include="myalgoritm.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="rectangle.cpp" />
     <ClCompile Include="test.cpp" />
@@ -138,9 +145,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algoritms\algoritms.h" />
-    <ClInclude Include="algoritms\broteforce.h" />
+    <ClInclude Include="algoritms\native.h" />
+    <ClInclude Include="algoritms\scanline_bruteforce.h" />
+    <ClInclude Include="algoritms\scanline_fast.h" />
     <ClInclude Include="interface.h" />
-    <ClInclude Include="myalgoritm.h" />
     <ClInclude Include="rectangle.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="workwithfiles\workwithfiles.h" />
